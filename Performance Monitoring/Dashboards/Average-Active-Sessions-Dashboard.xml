@@ -1,0 +1,51 @@
+<form>
+  <label>Average Active Sessions - 1 Minute</label>
+  <fieldset submitButton="false">
+    <input type="time" token="time_tok">
+      <label>Time</label>
+      <default>
+        <earliest>rt-1h</earliest>
+        <latest>rt</latest>
+      </default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <chart>
+        <search>
+          <query>index=orcl_metrics source=db12:orcl sourcetype=aas-1min CLASS != "CPU_TOTAL" | dedup _time CLASS | timechart useother=FALSE avg(AAS) as AAS by CLASS | rename CPU_ORA as CPU-DB, CPU_OS as CPU-OS, CPU_ORA_WAIT as CPU-DB-Wait</query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.overlayFields">"CPU Cores"</option>
+        <option name="charting.chart.showDataLabels">minmax</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">stacked</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">all</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.fieldColors">{"Administrative": 0x6c6e69, "Application": 0xbf2a05, "Cluster":0xccc4af, "Commit":0xe36a05,
+   "Concurrency": 0x8a1b07, "Configuration": 0x5a4611, "CPU":0x05cc04, "Network":0x9b9b7a,
+  "Other": 0xf06fad, "Scheduler": 0x97f797, "Queuing":0xc4b69c, "System I/O":0x0993de,
+  "User I/O":0x054ae1,"CPU-DB": 0x0CCC00,"CPU-DB-Wait": 0x72ff6B,"CPU-OS": 0x013c16,"CPU Cores": 0xcd3f29}</option>
+      </chart>
+    </panel>
+  </row>
+</form>
