@@ -1,0 +1,3 @@
+jMeter Testing:
+Use this command to run the tests:
+jmeter -n -Jthreads=5 -Jlops=100 -t soe2.jmx
