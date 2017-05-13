@@ -1,0 +1,13 @@
+| dbxquery connection=splunk_test procedure="{call ref_cur_test(?,?) }" params="foo"
+
+
+index="_internal" earliest=-1h
+| stats max(_time) as time
+| eval max_time=strftime(time,"%Y-%m-%d %H:%M:%S.%3Q %p")
+| map search="| dbxquery connection=splunk_test procedure=\"{call ref_cur_test(?,?) }\" params=\"$max_time$\" "
+
+
+index="_internal" earliest=-1h
+| stats max(_time) as time
+| eval max_time=strftime(time,"%Y-%m-%d %H:%M:%S.%3Q")
+| map search="| dbxquery connection=splunk_test procedure=\"{call ref_cur_date_test(?,to_timestamp(?,'YYYY-MM-DD hh24:mi:ss.ff')) }\" params=\"$max_time$\" "
