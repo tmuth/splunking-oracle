@@ -1,12 +1,13 @@
+
+-- Example 1: Simple
 | dbxquery connection=splunk_test procedure="{call ref_cur_test(?,?) }" params="foo"
 
+-- Example 2: Passing a synthetic search result to a stored procedure
+| makeresults count=1
+| eval test="foo"
+| map search="| dbxquery connection=splunk_test procedure=\"{call ref_cur_test(?,?) }\" params=\"$test$\" "
 
-index="_internal" earliest=-1h
-| stats max(_time) as time
-| eval max_time=strftime(time,"%Y-%m-%d %H:%M:%S.%3Q %p")
-| map search="| dbxquery connection=splunk_test procedure=\"{call ref_cur_test(?,?) }\" params=\"$max_time$\" "
-
-
+-- Example 3: Passing a _time search result to a differnt stored procedure
 index="_internal" earliest=-1h
 | stats max(_time) as time
 | eval max_time=strftime(time,"%Y-%m-%d %H:%M:%S.%3Q")

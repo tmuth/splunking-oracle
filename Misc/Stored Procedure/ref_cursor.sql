@@ -27,6 +27,7 @@ END;
 /
 
 
+-- this one takes in a timestamp data type
 CREATE OR REPLACE PROCEDURE ref_cur_date_test(
   p_ref_cursor  OUT SYS_REFCURSOR, p_var_in IN timestamp)
 AS
