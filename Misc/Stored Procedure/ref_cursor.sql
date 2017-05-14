@@ -27,7 +27,8 @@ END;
 /
 
 
--- this one takes in a timestamp data type
+-- This one takes in a timestamp data type. Look at "Example 3" in call_ref_cursor.sql for 
+-- how to call it.
 CREATE OR REPLACE PROCEDURE ref_cur_date_test(
   p_ref_cursor  OUT SYS_REFCURSOR, p_var_in IN timestamp)
 AS
