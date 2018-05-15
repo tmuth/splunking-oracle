@@ -1,5 +1,4 @@
--- The search should really get the max date of audit logs that splunk has indexed.
-
-| makeresults count=1
-| eval time2=strftime(_time, "%Y-%m-%d %H:%M:%S")
-| map search="dbxquery connection=audit_mgt-12 procedure=\"{call unified_audit_mgt.purge_audit_logs(?,to_timestamp(?,'YYYY-MM-DD hh24:mi:ss')) }\" params=\"$time2$\" "
+index=orcl_unified_audit
+| stats max(_time) as max_time
+| eval max_time=strftime(max_time, "%Y-%m-%d %H:%M:%S")
+| map search="dbxquery connection=audit_mgt-12 procedure=\"{call unified_audit_mgt.purge_audit_logs(?,to_timestamp(?,'YYYY-MM-DD hh24:mi:ss')) }\" params=\"$max_time$\" "
