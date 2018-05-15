@@ -1,3 +1,3 @@
 index=orcl_audit sourcetype=orcl_unified_audit source=orcl
-| dedup DBID,INSTANCE_ID,EVENT_TIMESTAMP_UTC
+| dedup DBID,INSTANCE_ID,EVENT_TIMESTAMP_UTC, SCN
 | timechart count by OBJECT_SCHEMA usenull=false

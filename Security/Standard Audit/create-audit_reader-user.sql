@@ -12,4 +12,4 @@ GRANT "CONNECT" TO audit_reader ;
 -- SYSTEM PRIVILEGES
 GRANT CREATE SESSION TO audit_reader ;
 
-grant select on dba_audit_trail to audit_reader;
+grant select on dba_audit_trail,dba_common_audit_trail to audit_reader;
