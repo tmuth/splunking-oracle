@@ -8,7 +8,7 @@ group by event_day
 order by cnt desc nulls last;
 
 
--- Count of rows by d
+-- min/max/mean/standard deviation for rows per day
 select min(cnt), max(cnt), avg(cnt),stddev(cnt) from(
 select event_day,count(*) cnt from(
     select trunc(cast(event_timestamp as date),'dd') event_day from unified_audit_trail where event_timestamp >= (systimestamp - 30))
