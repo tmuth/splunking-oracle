@@ -1,8 +1,7 @@
 SELECT *
-FROM
-  (SELECT CAST((event_timestamp at TIME zone 'UTC') AS TIMESTAMP) event_timestamp_utc,
-    u.*
-  FROM UNIFIED_AUDIT_TRAIL u
-  )
-WHERE ( EVENT_TIMESTAMP_UTC >= ? )
-ORDER BY EVENT_TIMESTAMP_UTC ASC;
+  FROM (
+        select (extended_timestamp at TIME zone 'UTC') extended_timestamp_utc, t.* 
+          from dba_audit_trail t)
+          -- consider adding where extended_timestamp >= (systimestamp - 30 ) if there is an index on that column 
+ WHERE ( extended_timestamp_utc >= (systimestamp - 30 ))
+ ORDER BY extended_timestamp_utc ASC;
