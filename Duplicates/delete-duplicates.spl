@@ -1,0 +1,43 @@
+--
+-- create a batch input in DBX to import test_objects into splunk
+--
+
+-- simple splunk search to deduplicate the events based on _raw which is the whole event (not very efficient)
+index=test1 sourcetype=test_objects2
+| dedup _raw
+
+-- dedup based on the TIME_STAMP field (case sensitive), first removing the _raw field for performance.
+-- and table all of the fields for nicer looking report
+index=test1 sourcetype=test_objects2
+| fields - _raw
+| dedup TIME_STAMP
+
+-- dedup based on multiple fields and table only the fields we care about
+index=test1 sourcetype=test_objects2
+| fields - _raw
+| dedup TIME_STAMP OBJECT_NAME
+| table OBJECT_NAME,OBJECT_TYPE,OWNER,RNUM,TIME_STAMP
+
+
+-- dedup is performed on the search head. delete is performed on the indexers. Thus, you cannot just pipe dedup to delete.
+-- What we will do is the same technique used in Oracle for deletes: find the duplicate events (rows) then delete them based on
+-- on a unique identifier
+
+-- report on the duplicate records. Also note the 'edi=_cd' at the end which is extracting the event ID into a new field.
+-- this is similar to a rowid in Oracle. We will use this to actually perform the delete later.
+index=test1 sourcetype=test_objects2
+    | streamstats count as time_count by TIME_STAMP
+    | search time_count > 1
+    | eval eid=_cd
+
+
+-- splunk search to delete duplicates
+index=test1 sourcetype=test_objects2
+| eval eid=_cd
+| search
+    [ search index=test1 sourcetype=test_objects2
+    | streamstats count as time_count by TIME_STAMP
+    | search time_count > 1
+    | eval eid=_cd
+    | fields eid ]
+| delete
