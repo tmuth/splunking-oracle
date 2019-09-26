@@ -1,0 +1,8 @@
+index=orcl-performance (METRIC_NAME="Average Active Sessions" OR METRIC_NAME = "CPU_COUNT")
+| eval aas=if(METRIC_NAME="Average Active Sessions",VALUE,null)
+| eval cpu_count=if(METRIC_NAME="CPU_COUNT",VALUE,null)
+| stats max(aas) as aas,max(cpu_count) as cpu_count by _time
+| eval pct_busy=round(((aas/cpu_count)*100),1)
+| eval pct_busy=if(pct_busy > 100,100,pct_busy)
+| fields - aas,cpu_count
+| sort - _time
