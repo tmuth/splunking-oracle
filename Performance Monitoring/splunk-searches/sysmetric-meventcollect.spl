@@ -1,0 +1,11 @@
+index=orcl-performance 
+    [| mstats latest_time(_value) as earliest where index=orcl-metrics metric_name=CPU_COUNT 
+    | eval earliest=earliest+5
+| append [| makeresults count=1
+| eval earliest=relative_time(now(), "-30d")]
+| sort - earliest
+| streamstats count
+| where count=1
+| table earliest] 
+| rename METRIC_NAME as metric_name, VALUE as _value, INST_ID as inst_id
+| meventcollect index=orcl-metrics inst_id host
