@@ -31,7 +31,9 @@ index=test1 sourcetype=test_objects2
     | eval eid=_cd
 
 
--- splunk search to delete duplicates
+-- Splunk search to delete duplicates. The subsearch finds the duplicates and returns the event ID 
+-- to the main/primary/outer search as 'eid' where it joins to that search as a filter on 'eid'. 
+-- The primary search performs the delete. 
 index=test1 sourcetype=test_objects2
 | eval eid=_cd
 | search
